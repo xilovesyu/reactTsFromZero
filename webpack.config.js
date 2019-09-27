@@ -1,10 +1,16 @@
 const path = require('path')
 const htmlWebpackPlugin = require('html-webpack-plugin');
+const UglifyJsPlugin = require('uglifyjs-webpack-plugin');
 
-module.exports = {
+//const env = process.env.NODE_ENV || process.env.WEBPACK_MODE 
+
+module.exports = (env, argv) => {
+    console.log(env, argv)
+    return {
+    mode: argv.mode === 'production' ? 'production' : 'development',
     entry: './index.tsx',
     output: {
-      filename: 'bundle.js',
+      filename: '[name]-[hash].js',
       path: path.resolve(__dirname, 'dist')
     },
     module: {
@@ -62,7 +68,29 @@ module.exports = {
             filename: 'index.html',
         })
     ],
+    optimization: {
+        minimizer: [new UglifyJsPlugin({
+            parallel: true,
+            uglifyOptions: {
+                compress: {
+                    //warnings: false,
+                    conditionals: true,
+                    unused: true,
+                    comparisons: true,
+                    sequences: true,
+                    dead_code: true,
+                    evaluate: true,
+                    if_return: true,
+                    join_vars: true,
+                    drop_console: argv.mode === 'production',
+                    collapse_vars: true,
+                    reduce_vars: true,
+                }
+            }
+        })]
+    },
     resolve: {
         extensions: [".ts", ".tsx", ".js", ".jsx"]
     }
 }
+};
