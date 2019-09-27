@@ -41,6 +41,10 @@ module.exports = {
                 }, {
                     loader: "less-loader" // compiles Less to CSS
                 }]
+            },
+            {
+                test: /\.(png|gif|jpg|svg|ico)$/,
+                use: 'url-loader?limit=2020480&name=images/[name].[ext]',
             }
         ]
     },
