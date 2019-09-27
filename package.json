@@ -28,6 +28,7 @@
   },
   "scripts": {
     "start": "webpack-dev-server",
+    "build": "webpack --config webpack.config.js --mode production",
     "buildDev": "webpack --config webpack.config.js --mode development"
   }
 }
