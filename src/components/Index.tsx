@@ -4,7 +4,7 @@ import './Index.less'
 import helloWorldPng from '../images/hello_world.png'
 
 interface IndexState {
-    inputValue: string
+    inputValue: string;
 }
 export class Index extends React.Component<any, IndexState> {
     constructor(props: any) {
