@@ -26,7 +26,9 @@ export class Index extends React.Component<any, IndexState> {
         map.set('2', 'world')
         console.log(map)
         // array function
-
+        const promise = new Promise((resolve: any, reject: any) => {
+            resolve()
+        })
         return (
         <div className='hello_world'>
             <input value={this.state.inputValue} onChange={this.handleChange}/>
