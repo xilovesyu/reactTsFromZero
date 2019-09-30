@@ -1,6 +1,7 @@
 const path = require('path')
 const htmlWebpackPlugin = require('html-webpack-plugin')
 const UglifyJsPlugin = require('uglifyjs-webpack-plugin')
+const tsImportPluginFactory= require('ts-import-plugin')
 //const env = process.env.NODE_ENV || process.env.WEBPACK_MODE
 
 module.exports = (env, argv) => {
@@ -53,21 +54,18 @@ module.exports = (env, argv) => {
                     test: /\.tsx?$/,
                     use: [
                         {
-                            loader: 'babel-loader',
+                            loader: 'awesome-typescript-loader',
                             options: {
-                                cacheDirectory: true,
-                                presets: ['@babel/preset-env', '@babel/preset-react'],
-                                plugins: [
-                                    [
-                                        'import',
-                                        {libraryName: 'antd', style: 'css'}
-                                    ] //antd按需加载
-                                ],
-                                compact: false
+                                getCustomTransformers: () => ({
+                                    before: [
+                                        tsImportPluginFactory({
+                                            'libraryName': 'antd',
+                                            'libraryDirectory': 'es',
+                                            'style': 'css'
+                                        })
+                                    ]
+                                })
                             }
-                        },
-                        {
-                            loader: 'ts-loader'
                         }
                     ]
                 },
