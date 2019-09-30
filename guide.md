@@ -193,3 +193,60 @@ modified the package.json
   "lint": "eslint --ext .js,.ts,.tsx index.tsx webpack.config.js src/"
 }
 ```
+
+13. antd
+`yarn add antd`
+then 
+we can import components in index.tsx
+
+```typescript jsx
+import { Avatar, Button, Input } from 'antd'
+```
+
+But this way will import all components not just(Avatar, Button, Input). So we need to load based on our demand.
+
+We use `yarn add awesome-typescript-loader ts-import-plugin` to fix this problem.
+
+Change tsx rules as following:
+```javascript
+const tsImportPluginFactory= require('ts-import-plugin')
+
+{
+                    test: /\.tsx?$/,
+                    use: [
+                        {
+                            //use babel first and then use ts loader
+                            loader: 'babel-loader'
+                        },
+                        {
+                            loader: 'awesome-typescript-loader',
+                            options: {
+                                //load on demanded of antd.
+                                getCustomTransformers: () => ({
+                                    before: [
+                                        tsImportPluginFactory({
+                                            'libraryName': 'antd',
+                                            'libraryDirectory': 'es',
+                                            'style': 'css'
+                                        })
+                                    ]
+                                })
+                            }
+                        }
+                    ]
+                },
+}
+```
+modify tsconfig.json
+
+```json
+{
+  "compilerOptions": {
+    "target": "ES6",  /* Specify ECMAScript target version: 'ES3' (default), 'ES5', 'ES2015', 'ES2016', 'ES2017', 'ES2018', 'ES2019' or 'ESNEXT'. */
+    "module": "esnext",       
+    "jsx": "preserve",   //use react to translate jsx by typescript not babel.
+    "moduleResolution": "node",    
+    "esModuleInterop": true        
+  }
+}
+```
