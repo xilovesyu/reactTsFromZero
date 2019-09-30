@@ -54,8 +54,13 @@ module.exports = (env, argv) => {
                     test: /\.tsx?$/,
                     use: [
                         {
+                            //use babel first and then use ts loader
+                            loader: 'babel-loader'
+                        },
+                        {
                             loader: 'awesome-typescript-loader',
                             options: {
+                                //load on demanded of antd.
                                 getCustomTransformers: () => ({
                                     before: [
                                         tsImportPluginFactory({
