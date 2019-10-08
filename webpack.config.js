@@ -2,17 +2,28 @@ const path = require('path')
 const htmlWebpackPlugin = require('html-webpack-plugin')
 const UglifyJsPlugin = require('uglifyjs-webpack-plugin')
 const tsImportPluginFactory= require('ts-import-plugin')
+const { CleanWebpackPlugin } = require('clean-webpack-plugin')
 //const env = process.env.NODE_ENV || process.env.WEBPACK_MODE
 
+const outputDir = 'dist'
+const production = 'production'
+const development = 'development'
+let currentMode
 module.exports = (env, argv) => {
-    console.log(env, argv)
+    if(argv.mode && argv.mode === production) {
+        currentMode = production
+    } else {
+        currentMode =development
+    }
+    console.log('currentMode:', currentMode)
     return {
         mode: argv.mode === 'production' ? 'production' : 'development',
         entry: './index.tsx',
         output: {
             filename: '[name]-[hash].js',
-            path: path.resolve(__dirname, 'dist')
+            path: path.resolve(__dirname, outputDir)
         },
+        devtool: argv.mode === 'production' ? false: 'inline-source-map',
         module: {
             rules: [
                 {
@@ -30,7 +41,7 @@ module.exports = (env, argv) => {
                 },
                 {
                     test: /\.css$/,
-                    //include: [path.join(__dirname, '/node_modules/antd'), /src/],
+                    include: [path.join(__dirname, 'node_modules/antd'), /src/],
                     use: [
                         'style-loader',
                         'css-loader'
@@ -89,6 +100,8 @@ module.exports = (env, argv) => {
             hot: true,
         },
         plugins: [
+            //add clean plugin firstly.
+            new CleanWebpackPlugin(),
             new htmlWebpackPlugin({
                 template: path.join(__dirname, './index.html'),
                 filename: 'index.html',

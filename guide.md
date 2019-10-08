@@ -250,3 +250,19 @@ modify tsconfig.json
   }
 }
 ```
+
+14. Add clean webpack plugin
+
+```bash
+yarn add clean-webpack-plugin
+```
+in webpack.config.js
+```js
+const { CleanWebpackPlugin } = require('clean-webpack-plugin')
+module.exports= {
+    plugins: [
+            //add clean plugin firstly.
+            new CleanWebpackPlugin()
+    ]
+}
+```
