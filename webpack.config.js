@@ -17,13 +17,13 @@ module.exports = (env, argv) => {
     }
     console.log('currentMode:', currentMode)
     return {
-        mode: argv.mode === 'production' ? 'production' : 'development',
+        mode: currentMode,
         entry: './index.tsx',
         output: {
             filename: '[name]-[hash].js',
             path: path.resolve(__dirname, outputDir)
         },
-        devtool: argv.mode === 'production' ? false: 'inline-source-map',
+        devtool: currentMode === 'production' ? false: 'inline-source-map',
         module: {
             rules: [
                 {
@@ -121,7 +121,7 @@ module.exports = (env, argv) => {
                         evaluate: true,
                         if_return: true,
                         join_vars: true,
-                        drop_console: argv.mode === 'production',
+                        drop_console: currentMode === 'production',
                         collapse_vars: true,
                         reduce_vars: true,
                     }
