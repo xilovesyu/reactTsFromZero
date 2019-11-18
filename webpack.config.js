@@ -1,4 +1,5 @@
 const path = require('path')
+const BundleAnalyzerPlugin = require('webpack-bundle-analyzer').BundleAnalyzerPlugin
 const htmlWebpackPlugin = require('html-webpack-plugin')
 const UglifyJsPlugin = require('uglifyjs-webpack-plugin')
 const tsImportPluginFactory= require('ts-import-plugin')
@@ -105,7 +106,8 @@ module.exports = (env, argv) => {
             new htmlWebpackPlugin({
                 template: path.join(__dirname, './index.html'),
                 filename: 'index.html',
-            })
+            }),
+            new BundleAnalyzerPlugin({ analyzerPort: 8081 })
         ],
         optimization: {
             minimizer: [new UglifyJsPlugin({
