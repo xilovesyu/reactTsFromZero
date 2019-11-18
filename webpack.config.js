@@ -1,4 +1,5 @@
 const path = require('path')
+const webpack = require('webpack')
 const BundleAnalyzerPlugin = require('webpack-bundle-analyzer').BundleAnalyzerPlugin
 const htmlWebpackPlugin = require('html-webpack-plugin')
 const UglifyJsPlugin = require('uglifyjs-webpack-plugin')
@@ -107,6 +108,7 @@ module.exports = (env, argv) => {
                 template: path.join(__dirname, './index.html'),
                 filename: 'index.html',
             }),
+            new webpack.IgnorePlugin(/^\.\/locale$/, /moment$/),
             new BundleAnalyzerPlugin({ analyzerPort: 8081 })
         ],
         optimization: {
@@ -132,7 +134,10 @@ module.exports = (env, argv) => {
         },
         resolve: {
             modules: ['node_modules', path.join(__dirname, './node_modules')],
-            extensions: ['.ts', '.tsx', '.js', '.jsx', '.css']
-        }
+            extensions: ['.ts', '.tsx', '.js', '.jsx', '.css'],
+            alias: {
+                '@ant-design/icons/lib/dist$': path.resolve(__dirname, './src/utils/antdIcons.js')
+            }
+        },
     }
 }
