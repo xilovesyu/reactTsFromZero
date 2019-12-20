@@ -1,6 +1,7 @@
 const path = require('path')
 const webpack = require('webpack')
 const BundleAnalyzerPlugin = require('webpack-bundle-analyzer').BundleAnalyzerPlugin
+const MiniCssExtractPlugin = require('mini-css-extract-plugin')
 const htmlWebpackPlugin = require('html-webpack-plugin')
 const UglifyJsPlugin = require('uglifyjs-webpack-plugin')
 const tsImportPluginFactory= require('ts-import-plugin')
@@ -25,6 +26,10 @@ module.exports = (env, argv) => {
             filename: '[name]-[hash].js',
             path: path.resolve(__dirname, outputDir)
         },
+        externals: {
+            'react': 'React',
+            'react-dom': 'ReactDOM'
+        },
         devtool: currentMode === 'production' ? false: 'inline-source-map',
         module: {
             rules: [
@@ -45,7 +50,7 @@ module.exports = (env, argv) => {
                     test: /\.css$/,
                     include: [path.join(__dirname, 'node_modules/antd'), /src/],
                     use: [
-                        'style-loader',
+                        MiniCssExtractPlugin.loader,
                         'css-loader'
                     ]
                 },
@@ -109,6 +114,10 @@ module.exports = (env, argv) => {
                 filename: 'index.html',
             }),
             new webpack.IgnorePlugin(/^\.\/locale$/, /moment$/),
+            new MiniCssExtractPlugin({
+                filename: '[name].css',
+                chunkFilename: '[id].css'
+            }),
             new BundleAnalyzerPlugin({ analyzerPort: 8081 })
         ],
         optimization: {
